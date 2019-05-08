@@ -39,7 +39,7 @@ check_merging<-function(dead_obj_id1, current_objects, object_props){
 }
 
 #' Find id of the parent of the new born object.
-#' 
+#'
 #' returns unique id of the origin (or zero) for given object in frame1.
 #' Also remember that old object id2 is actual id1 in frame1, as we still have
 #' to update the object_ids.
@@ -61,7 +61,7 @@ get_origin_uid<-function(obj, frame1, old_objects){
 
 
 #' Checks for parent in the vicinity.
-#' 
+#'
 #' This function checks near by objects in the frame for the given new-born object.
 #' origin is an object which existed before the new born objects,
 #' has comparable or larger size and is close enough to the offspring.
@@ -97,7 +97,7 @@ find_origin <- function(id1_newObj, frame1){
     nearest_object_id <- neighbour_id[which(neighbour_dist<4)]
     the_nearest_object <- neighbour_id[which(neighbour_dist==min(neighbour_dist))]
 
-    if (is.empty(nearest_object_id)) #if no close neighbour return 0
+    if (spatstat::is.empty(nearest_object_id)) #if no close neighbour return 0
         return(0)
 
     # This is to take care of multiple objects in the neighbouring region.

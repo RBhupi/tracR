@@ -51,7 +51,7 @@ fft_flowVectors <- function (im1, im2) {
     #im2 <- replace(im2, im1==0, runif(1))       # when objects are big and smooth
 
     crossCov <- fft_crossCov(im1, im2)
-    cov_smooth <- spatstat::blur(as.im(crossCov))
+    cov_smooth <- spatstat::blur(spatstat::as.im(crossCov))
 
     dims<-dim(im1)
 
