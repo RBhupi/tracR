@@ -98,7 +98,7 @@ find_origin <- function(id1_newObj, frame1){
         }
     }
 
-    nearest_object_id <- neighbour_id[which(neighbour_dist<4)]
+    nearest_object_id <- neighbour_id[which(neighbour_dist < split_distance)]
     the_nearest_object <- neighbour_id[which(neighbour_dist==min(neighbour_dist))]
 
     if (spatstat::is.empty(nearest_object_id)) #if no close neighbour return 0
