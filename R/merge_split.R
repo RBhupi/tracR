@@ -72,34 +72,9 @@ find_origin <- function(id1_newObj, frame1){
 
     #get length and indices of the given object's boundary pixels
     object_ind <- which(frame1_edges==id1_newObj, arr.ind = TRUE)
-
-
     #Do the same for all other objects in the frame
     neighbour_ind <- which(frame1_edges>0 & frame1_edges!=id1_newObj, arr.ind = T)
-
-    object_size <- length(object_ind[,1])
-    neighbour_size <- length(neighbour_ind[, 1])
-
-    # make empty vectors
-    neighbour_dist <- NULL
-    neighbour_id <- NULL
-    size_ratio <- NULL
-    size_diff <- NULL
-
-    # We are chekcing for all object pixels and finding the nearest pixel.
-    for(pix in seq(object_size)){
-        for(neighbour in seq(neighbour_size)){
-            euc_dist <- euclidean_dist(as.vector(object_ind[pix, ]),
-                                       as.vector(neighbour_ind[neighbour, ]))
-            neighbour_dist <- append(neighbour_dist, euc_dist)
-
-            pix_id <- as.vector(neighbour_ind[neighbour, ])
-            neighbour_id <- append(neighbour_id, frame1[pix_id[1], pix_id[2]])
-        }
-    }
-
-    nearest_object_id <- neighbour_id[which(neighbour_dist < split_distance)]
-    the_nearest_object <- neighbour_id[which(neighbour_dist==min(neighbour_dist))]
+    nearest_object_id <- find_nearby_objects(object_ind, neighbour_ind)
 
     if (spatstat::is.empty(nearest_object_id)) #if no close neighbour return 0
         return(0)
@@ -129,6 +104,10 @@ find_origin <- function(id1_newObj, frame1){
 }
 
 
+
+
+
+
 #This function returns an image/matrix with only edges of the objects.
 get_object_edges <- function(frame) {
     frame_distmap <- EBImage::distmap(frame)
@@ -136,10 +115,46 @@ get_object_edges <- function(frame) {
     frame_edges <- ifelse(frame_edges==2, frame, 0)
 }
 
+
+
+find_nearby_objects <- function(object_ind, neighbour_ind) {
+
+    object_size <- length(object_ind[,1])
+    neighbour_size <- length(neighbour_ind[, 1])
+
+    # make empty vectors
+    neighbour_dist <- NULL
+    neighbour_id <- NULL
+    size_ratio <- NULL
+    size_diff <- NULL
+
+    # We are chekcing for all object pixels and finding the nearest pixel.
+    for(pix in seq(object_size)){
+        for(neighbour in seq(neighbour_size)){
+            euc_dist <- euclidean_dist(as.vector(object_ind[pix, ]),
+                                       as.vector(neighbour_ind[neighbour, ]))
+            neighbour_dist <- append(neighbour_dist, euc_dist)
+
+            pix_id <- as.vector(neighbour_ind[neighbour, ])
+            neighbour_id <- append(neighbour_id, frame1[pix_id[1], pix_id[2]])
+        }
+    }
+
+    nearest_object_id <- neighbour_id[which(neighbour_dist < split_distance)]
+    #the_nearest_object <- neighbour_id[which(neighbour_dist==min(neighbour_dist))]
+    return(nearest_object_id)
+}
+
+
+
 #' standard Euclidean distance.
 #'
 #' Returns  Euclidean distance between two vectors or matrices.
 euclidean_dist <- function(vec1, vec2){
     sqrt(sum((vec1-vec2)^2))
 }
+
+
+
+
 
