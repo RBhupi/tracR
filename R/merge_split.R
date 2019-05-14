@@ -74,28 +74,15 @@ find_origin <- function(id1_newObj, frame1){
     object_ind <- which(frame1_edges==id1_newObj, arr.ind = TRUE)
     #Do the same for all other objects in the frame
     neighbour_ind <- which(frame1_edges>0 & frame1_edges!=id1_newObj, arr.ind = T)
+
+
     nearest_object_id <- find_nearby_objects(object_ind, neighbour_ind)
 
     if (spatstat::is.empty(nearest_object_id)) #if no close neighbour return 0
         return(0)
 
-    # This is to take care of multiple objects in the neighbouring region.
-    neigh_objects <- unique(nearest_object_id)
-    for(object in neigh_objects){
-        nearest_object_size <- length(frame1[frame1==object])
-        size_ratio <- append(size_ratio, nearest_object_size/object_size)
-        size_diff <- append(size_diff, nearest_object_size - object_size)
-    }
+    return(big_unique_obj(id1_newObj, nearest_object_id, frame1))
 
-    # id of the object which has max size_ratio
-    big_ratio_obj <- neigh_objects[which(size_ratio==max(size_ratio))]
-    big_diff_obj  <- neigh_objects[which(size_diff==max(size_diff))]
-
-    #if both are same call it the origin
-    if(big_ratio_obj==big_diff_obj)
-        return(big_diff_obj[1])
-    else
-        return(big_diff_obj[1])
     # NOTE: 1. At this time we are calling big_diff_obj as origin in all the situations.
     # This looks like a good first guess. But if needed we can make it more
     # complex and use ratio and size_diff as cost function.
@@ -111,8 +98,8 @@ find_origin <- function(id1_newObj, frame1){
 #This function returns an image/matrix with only edges of the objects.
 get_object_edges <- function(frame) {
     frame_distmap <- EBImage::distmap(frame)
-    frame_edges <- replace(frame_distmap, frame_distmap>0 & frame_distmap<=2, 0)
-    frame_edges <- ifelse(frame_edges==2, frame, 0)
+    frame_edges <- ifelse(frame_distmap==1, frame, 0)
+    return(frame_edges)
 }
 
 
@@ -125,8 +112,6 @@ find_nearby_objects <- function(object_ind, neighbour_ind) {
     # make empty vectors
     neighbour_dist <- NULL
     neighbour_id <- NULL
-    size_ratio <- NULL
-    size_diff <- NULL
 
     # We are chekcing for all object pixels and finding the nearest pixel.
     for(pix in seq(object_size)){
@@ -143,6 +128,33 @@ find_nearby_objects <- function(object_ind, neighbour_ind) {
     nearest_object_id <- neighbour_id[which(neighbour_dist < split_distance)]
     #the_nearest_object <- neighbour_id[which(neighbour_dist==min(neighbour_dist))]
     return(nearest_object_id)
+}
+
+
+# select the unique object that is large in size from the nearby objects
+big_unique_obj <- function(new_obj_id, nearest_object_id, frame) {
+    # This is to take care of multiple objects in the neighbouring region.
+    neigh_objects <- unique(nearest_object_id)
+
+    object_size <- length(frame1[frame1==new_obj_id])
+    size_ratio <- NULL
+    size_diff <- NULL
+    for(object in neigh_objects){
+        nearest_object_size <- length(frame1[frame==object])
+        size_ratio <- append(size_ratio, nearest_object_size/object_size)
+        size_diff <- append(size_diff, nearest_object_size - object_size)
+    }
+
+    # id of the object which has max size_ratio
+    big_ratio_obj <- neigh_objects[which(size_ratio==max(size_ratio))]
+    big_diff_obj  <- neigh_objects[which(size_diff==max(size_diff))]
+
+    #if both are same call it the origin
+    if(big_ratio_obj==big_diff_obj)
+        return(big_diff_obj[1])
+    else
+        return(big_diff_obj[1])
+
 }
 
 
