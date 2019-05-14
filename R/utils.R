@@ -1,5 +1,5 @@
-#' Plots image with objects labels. 
-#' 
+#' Plots image with objects labels.
+#'
 #' This is used in development stage to test images when processed 1-by-1.
 plot_objects_label <- function(labeled_image, xvalues, yvalues){
     image2D(replace(labeled_image, labeled_image==0, NA), x=xvalues, y=yvalues)
@@ -24,9 +24,3 @@ plot_objects_label <- function(labeled_image, xvalues, yvalues){
 
 
 
-#' standard Euclidean distance.
-#' 
-#' Returns  Euclidean distance between two vectors or matrices.
-euclidean_dist <- function(vec1, vec2){
-    sqrt(sum((vec1-vec2)^2))
-}

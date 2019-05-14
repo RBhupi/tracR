@@ -68,15 +68,19 @@ get_origin_uid<-function(obj, frame1, old_objects){
 find_origin <- function(id1_newObj, frame1){
     if(max(frame1)==1) return(0) # If there is only one object, then dont look for origin
 
-    #get length and indices of the given object pixels
-    object_ind <- which(frame1==id1_newObj, arr.ind = TRUE)
-    object_size <- length(object_ind[,1])
+    frame1_edges <- get_object_edges(frame1)
 
-    #Do this for all other objects in the frame
-    neighbour_ind <- which(frame1>0 & frame1!=id1_newObj, arr.ind = T)
+    #get length and indices of the given object's boundary pixels
+    object_ind <- which(frame1_edges==id1_newObj, arr.ind = TRUE)
+
+
+    #Do the same for all other objects in the frame
+    neighbour_ind <- which(frame1_edges>0 & frame1_edges!=id1_newObj, arr.ind = T)
+
+    object_size <- length(object_ind[,1])
     neighbour_size <- length(neighbour_ind[, 1])
 
-    #make empty vectors
+    # make empty vectors
     neighbour_dist <- NULL
     neighbour_id <- NULL
     size_ratio <- NULL
@@ -122,5 +126,20 @@ find_origin <- function(id1_newObj, frame1){
     # complex and use ratio and size_diff as cost function.
     # 2. We are not considering the possibility of multiple potential origins
     # beyond this point.
+}
+
+
+#This function returns an image/matrix with only edges of the objects.
+get_object_edges <- function(frame) {
+    frame_distmap <- EBImage::distmap(frame)
+    frame_edges <- replace(frame_distmap, frame_distmap>0 & frame_distmap<=2, 0)
+    frame_edges <- ifelse(frame_edges==2, frame, 0)
+}
+
+#' standard Euclidean distance.
+#'
+#' Returns  Euclidean distance between two vectors or matrices.
+euclidean_dist <- function(vec1, vec2){
+    sqrt(sum((vec1-vec2)^2))
 }
 
