@@ -1,6 +1,6 @@
 
 #' FFT shifts are corrected using last headings.
-#' 
+#'
 #' takes in flow vector based shift and current_object dataframe which has last
 #' headings, and check if they are resonably close if not rejects or modify shift and return.
 #' Note:  frame2 of last timestep is now frame1, but current_objects still has it as frame2.
@@ -19,7 +19,7 @@ correct_shift<-function(this_shift, current_objects, object_id1){
 
 
 #' Returns object extent properties.
-#' 
+#'
 #' Takes in a labeled image and finds the radius, area and the center of the given object.
 get_objExtent <- function(labeled_image, obj_label) {
     #center indices of the object assuming it is a rectangle
@@ -45,22 +45,23 @@ get_objExtent <- function(labeled_image, obj_label) {
 
 
 #' predict search region.
-#' 
+#'
 #' Predicts search extent/region for the object in image2 given the image shift.
-predict_searchExtent <- function(obj1_extent, shift, search_radius){
+predict_searchExtent <- function(obj1_extent, shift){
     shifted_center <- obj1_extent$obj_center + shift
+    search_radius <- sqrt(obj1_extent$obj_area)
 
-    x1 <- shifted_center[1] -search_radius
-    x2 <- shifted_center[1] +search_radius
-    y1 <- shifted_center[2] -search_radius
-    y2 <- shifted_center[2] +search_radius
+    x1 <- shifted_center[1] - search_radius
+    x2 <- shifted_center[1] + search_radius
+    y1 <- shifted_center[2] - search_radius
+    y2 <- shifted_center[2] + search_radius
 
     return(list(x1=x1, x2=x2, y1=y1, y2=y2, center_pred=shifted_center))
 }
 
 
 #' checks that the search box is in the domain.
-#' 
+#'
 #' Returns NA if search box  outside the image or search box is very small.
 check_searchBox <- function(search_box, img_dims){
 
@@ -87,7 +88,7 @@ check_searchBox <- function(search_box, img_dims){
 
 
 #' Returns vector of objects ids in the given reion.
-#' 
+#'
 #' Given the search box and image2, returns objects in the region.
 find_objects <- function(search_box, image2) {
     #if search box is NA then object left the image
@@ -104,8 +105,8 @@ find_objects <- function(search_box, image2) {
 
 
 #' return center indices of the object.
-#' 
-#' Returns indices of center pixel of the given object id from a labeled image. 
+#'
+#' Returns indices of center pixel of the given object id from a labeled image.
 #' This may be done in better way for non-oval objects.
 get_objectCenter<-function(obj_id, labeled_image){
     obj_index <- which(labeled_image==obj_id, arr.ind = TRUE)
@@ -117,7 +118,7 @@ get_objectCenter<-function(obj_id, labeled_image){
 
 
 #' Return all the object's size, location and classification info.
-#' 
+#'
 #' xyDist should be a list of x_dist and y_dist in km.
 #' @export
 get_objectProp <- function(image1, xyDist){
@@ -138,8 +139,8 @@ get_objectProp <- function(image1, xyDist){
 
 
 
-#' 
-#' 
+#'
+#'
 #' Attaches y and x distance from radar in km to object location indices
 attach_xyDist<-function(obj_props, xdist, ydist){
     obj_props$xdist <- xdist[obj_props$x]
