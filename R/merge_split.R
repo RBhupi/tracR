@@ -43,15 +43,11 @@ check_merging<-function(dead_obj_id1, current_objects, object_props){
 #' returns unique id of the origin (or zero) for given object in frame1.
 #' Also remember that old object id2 is actual id1 in frame1, as we still have
 #' to update the object_ids.
-get_origin_uid<-function(obj, frame1, old_objects){
-    origin_id <- find_origin(obj, frame1)
+get_origin_uid<-function(obj, frame1, old_objects, old_frame1){
+    origin_id <- find_origin(obj, frame1, old_frame1)
     if (origin_id==0) return(0)
 
-    origin_index <- which(old_objects$id2==origin_id)
-
-    # If it is first observation of the object then it will not be recorded in
-    # old_objects$id2, ans it will not be suitable as the origin.
-    if(!(origin_id %in% old_objects$id2)) return(0)
+    origin_index <- which(old_objects$id1==origin_id)
 
     origin_uid <- old_objects$uid[origin_index]
     return(origin_uid)
@@ -65,33 +61,14 @@ get_origin_uid<-function(obj, frame1, old_objects){
 #' This function checks near by objects in the frame for the given new-born object.
 #' origin is an object which existed before the new born objects,
 #' has comparable or larger size and is close enough to the offspring.
-find_origin <- function(id1_newObj, frame1){
-    if(max(frame1)==1) return(0) # If there is only one object, then dont look for origin
+find_origin <- function(id1_newObj, frame1, old_frame1){
+    if(max(frame1)==1 || max(old_frame1)==0) return(0) # If there is only one object, then dont look for origin
 
-
-
-
-
-    frame1_edges <- get_object_edges(frame1)
-
-    #get length and indices of the given object's boundary pixels
-    object_ind <- which(frame1_edges==id1_newObj, arr.ind = TRUE)
-    #Do the same for all other objects in the frame
-    neighbour_ind <- which(frame1_edges>0 & frame1_edges!=id1_newObj, arr.ind = T)
-
-
-    nearest_object_id <- find_nearby_objects(object_ind, neighbour_ind)
-
-    if (spatstat::is.empty(nearest_object_id)) #if no close neighbour return 0
-        return(0)
-
-    return(big_unique_obj(id1_newObj, nearest_object_id, frame1))
-
-    # NOTE: 1. At this time we are calling big_diff_obj as origin in all the situations.
-    # This looks like a good first guess. But if needed we can make it more
-    # complex and use ratio and size_diff as cost function.
-    # 2. We are not considering the possibility of multiple potential origins
-    # beyond this point.
+    overlap_old_id1 <- old_frame1[which(frame1==id1_newObj, arr.ind = TRUE)]
+    origin_old_id1 <- which.max(table(overlap_old_id1[overlap_old_id1>0]))
+    if(length(origin_old_id1)==0) return(0)
+    #OR else
+    return(names(origin_old_id1))
 }
 
 

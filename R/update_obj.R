@@ -57,7 +57,7 @@ attach_xyheads <- function(frame1, frame2, current_objects) {
 #' we will ask for new uids. This information will be written  in
 #' current_objects and return for writting in to the output file.
 #' @export
-update_current_objects <- function(frame1, frame2, pairs, old_objects){
+update_current_objects <- function(old_frame1, frame1, frame2, pairs, old_objects){
     nobj <- max(frame1)
     objects_mat <- matrix(data = NA, ncol = 5, nrow = nobj)
 
@@ -72,7 +72,7 @@ update_current_objects <- function(frame1, frame2, pairs, old_objects){
         } else {
             objects_mat[obj, 2] <- next_uid()
             objects_mat[obj, 4] <- 1 #first observation of the echo
-            objects_mat[obj, 5] <- get_origin_uid(obj, frame1, old_objects)
+            objects_mat[obj, 5] <- get_origin_uid(obj, frame1, old_objects, old_frame1)
         }
     }
 
