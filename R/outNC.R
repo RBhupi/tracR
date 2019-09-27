@@ -1,6 +1,6 @@
 
 
-#' Creates output netcdf file for radar echo trajectories. 
+#' Creates output netcdf file for radar echo trajectories.
 #'
 #' This is the longest function.
 #' @param ofile name and path of the output file.
@@ -90,8 +90,9 @@ create_outNC_track <- function(ofile, max_obs) {
     ncatt_put(outNC, varid = "echo_id", attname = "cf_role", attval = "trajectory_id")
     ncatt_put(outNC, varid = 0, attname = "featureType", attval = "trajectory")
 
-    description <- paste("The CPOL (Darwin) radar echoes of convective types were separated using Steiner classification scheme and tracked.",
-                         "Merging and splitting is added with echo ids.")
+    description <- paste("The CPOL (Darwin) radar echoes of convective types were separated using Raut et al. (2019) classification scheme and tracked.",
+                         "Convective and Intermediate regions were tracked.")
+
 
     ncatt_put(outNC, varid = 0, attname = "_description",
               attval = description, prec = "text")
@@ -106,11 +107,10 @@ create_outNC_track <- function(ofile, max_obs) {
 }
 
 
-#' Writes all the setting parameters (as attributes) for the tracking. 
-#' 
+#' Writes all the setting parameters (as attributes) for the tracking.
+#'
 #' These parameters affect the sensitivity of the tracks, mergers and split definitions etc.
 write_settingParms_toNC <- function(outNC){
-    ncatt_put(outNC, varid = 0, attname = "search_margin", attval =search_margin, prec = "short")
     ncatt_put(outNC, varid = 0, attname = "flow_margin", attval =flow_margin, prec = "short")
     ncatt_put(outNC, varid = 0, attname = "maxFlow_magnitude", attval =maxFlow_mag, prec = "short")
     ncatt_put(outNC, varid = 0, attname = "min_echoSize_toTrack", attval =min_size, prec = "short")
@@ -120,7 +120,7 @@ write_settingParms_toNC <- function(outNC){
 
 
 #' Writes properties and uids for all objects into output netcdf file.
-#' 
+#'
 #' @param outNC output netcdf file object from function \code{\link{create_outNC_track}}
 #' @param current_objects output of \code{update_current_objects}
 #' @param obj_props output of \code{get_object_prop()}
@@ -147,7 +147,7 @@ write_update<-function(outNC, current_objects, obj_props, obs_time){
 
 
 #' Write duration of dead objects in output NC file.
-#' 
+#'
 #' Writes number of observations for dead objects. Duration is in time-steps.
 write_duration <- function(outNC, current_objects){
     nobj <- length(current_objects$id1)
@@ -168,10 +168,10 @@ write_duration <- function(outNC, current_objects){
 }
 
 
-#' Write survival stats 
-#' 
+#' Write survival stats
+#'
 #' write number of lived, dead and born objects to the file for each scan.
-#' 
+#'
 #' @export
 write_survival <- function(outNC, survival_stat, time, scan){
     if(!is.atomic(survival_stat)){

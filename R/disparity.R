@@ -1,6 +1,6 @@
 
 #' returns size change between the frames.
-#' 
+#'
 #' Returns change in size of the eacho as ratio of bigger number to smaller
 #' number when given two number, minus 1.
 get_sizeChange<-function(x, y){
@@ -15,7 +15,7 @@ get_sizeChange<-function(x, y){
 
 
 #' Returns Disparity of all the objects in the region.
-#' 
+#'
 #' Returns disparities of all the objects found within the search box or NA if
 #' no object is present.
 get_disparity_all <- function(obj_found, image2, search_box, obj1_extent) {
@@ -30,7 +30,7 @@ get_disparity_all <- function(obj_found, image2, search_box, obj1_extent) {
 
         if(length(obj_found)==1){ # if this is the only object
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
-            if(disparity <= 3) disparity <- 0 #lower the disparity if not too large
+            if(disparity <= 5) disparity <- 0 #lower the disparity if not too large
 
         } else { # when more than one objects to match
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
@@ -43,7 +43,7 @@ get_disparity_all <- function(obj_found, image2, search_box, obj1_extent) {
 
 
 #' Actually computes desparity for a single object.
-#' 
+#'
 #' Check how it is computed for detail.
 #' This parameter has most effect on the acccuracy of the tracks.
 get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
@@ -65,7 +65,7 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
         change <- append(change, size_changed)
 
     }
-    
+
     #This is crucial parameter that affect the results
     disparity <- dist_pred + change + dist_initial - overlap
 
@@ -77,14 +77,14 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
 
 
 #' checks overlapping regoin for big objects in both the frames.
-#' 
+#'
 #' Checks overlapping area in pixels, size of the object and return if overlapping is considerable.
 check_bigOverlap <- function(obj_extend, target_extend){
     duplicates <- duplicated(rbind(obj_extend$obj_index, target_extend$obj_index))
     overlap_area <- length(duplicates[duplicates==TRUE])
     if(obj_extend$obj_area > big_obj_size & overlap_area >= obj_extend$obj_area/2){
         return(overlap_area)
-    } else 
+    } else
         return(0)
 }
 

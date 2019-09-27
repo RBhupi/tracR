@@ -1,9 +1,9 @@
 
 #'returns pairs of object ids from both frames.
 #'
-#' Given two images, the function identifies the matching 
-#' objects and pair them appropriatly using Hungarian method and desparity. 
-#' 
+#' Given two images, the function identifies the matching
+#' objects and pair them appropriatly using Hungarian method and desparity.
+#'
 #' @export
 #' @seealso  code{disparity function}.
 get_matchPairs <- function(image1, image2) {
@@ -23,7 +23,7 @@ get_matchPairs <- function(image1, image2) {
 }
 
 #' Matches objects into pairs and removes bad matching.
-#' 
+#'
 #' The bad matching is when disparity is more than the set value.
 match_pairs <- function(obj_match) {
     obj_match[obj_match<0] <- 0
@@ -40,7 +40,7 @@ match_pairs <- function(obj_match) {
 
 
 #' Matches all the obejects in image1 to the objects in image2.
-#' 
+#'
 #' This is the main function to be called on two sets of radar images, for tracking.
 locate_allObjects <- function(image1, image2) {
     nObjects1 <- max(image1) #objects in first image
@@ -61,7 +61,7 @@ locate_allObjects <- function(image1, image2) {
         if(exists("current_objects"))
             shift <- correct_shift(shift, current_objects, obj_id1)
 
-        search_box <- predict_searchExtent(obj1_extent, shift, search_margin)
+        search_box <- predict_searchExtent(obj1_extent, shift)
         search_box <- check_searchBox(search_box, dim(image2)) #search within the image
         obj_found <- find_objects(search_box, image2)  # gives possible candidates
         disparity <- get_disparity_all(obj_found, image2, search_box, obj1_extent)
@@ -76,7 +76,7 @@ locate_allObjects <- function(image1, image2) {
 
 
 #' Corrects and saves disparity for the object matching stage.
-#' 
+#'
 #' If disparity is large then it saves a large number for the value to reduce
 #' the chances of this pairing to zero, else it save the value in the obj_match array.
 save_objMatch <- function(obj_id1, obj_found, disparity, obj_match) {

@@ -68,6 +68,10 @@ get_origin_uid<-function(obj, frame1, old_objects){
 find_origin <- function(id1_newObj, frame1){
     if(max(frame1)==1) return(0) # If there is only one object, then dont look for origin
 
+
+
+
+
     frame1_edges <- get_object_edges(frame1)
 
     #get length and indices of the given object's boundary pixels

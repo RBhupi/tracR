@@ -1,6 +1,6 @@
 
 #' saves last x y movements of the objects.
-#' 
+#'
 #' Attaches last xyheads to current objects for future use.
 attach_xyheads <- function(frame1, frame2, current_objects) {
 
@@ -23,7 +23,7 @@ attach_xyheads <- function(frame1, frame2, current_objects) {
 
 
 #' Removes dead objects, updates living objects and assign new uids to new born objects.
-#' 
+#'
 #' Also, updates number of valid observations for each echo.
 #' This function is called when rain continues from the last frame.
 #' This is a complicated function to understand.
@@ -89,7 +89,7 @@ update_current_objects <- function(frame1, frame2, pairs, old_objects){
 
 
 #' Returns a dataframe for objects with unique ids and their corresponding ids in frame1 and frame2.
-#' 
+#'
 #' This function is called when new rainy scan is seen after the period of no rain or the first time.
 #' @param first_frame First image for tracking.
 #' @param second_frame Second image for tracking.
@@ -113,8 +113,8 @@ init_uids <- function(first_frame, second_frame, pairs){
 
 
 
-#' 
-#' 
+#'
+#'
 #' Returns sequence of next unique ids and increament the uid_counter.
 next_uid<-function(count=1){
     this_uid <- uid_counter + 1:count
@@ -124,7 +124,7 @@ next_uid<-function(count=1){
 
 
 #' Returns a list with number of objects lived, died and born between the current and the previousstep.
-#' 
+#'
 #' @export
 survival_stats <- function(pairs, num_obj2) {
     pairs_vec <- as.vector(pairs)
