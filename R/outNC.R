@@ -65,6 +65,9 @@ create_outNC_track <- function(ofile, max_obs) {
     var_npix <- ncvar_def("area", units = "pixels", longname = "area of the echo in pixels",
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
                           compression = deflat, shuffle = TRUE)
+    var_ecnt <- ncvar_def("eccentricity", units = "", longname = "Eccentricity assuming elliptical shape.",
+                          dim = list(dim_obs, dim_echo), missval = -999, prec = "float",
+                          compression = deflat, shuffle = TRUE)
 
     #var_ncg <- ncvar_def("Cu_cong", units = "pixels", longname = "num of Cu Congestus pixels",
     #                     dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
@@ -79,7 +82,7 @@ create_outNC_track <- function(ofile, max_obs) {
     #                     compression = deflat, shuffle = TRUE)
 
     var_list <- list(var_time, var_survival, var_dur, var_origin, var_merged, var_xdist, var_ydist,
-                     var_x, var_y, var_npix) #, var_ncg, var_ncb, var_nco)
+                     var_x, var_y, var_npix, var_ecnt) #, var_ncg, var_ncb, var_nco)
 
 
     outNC <- nc_create(filename = ofile, vars = var_list)
@@ -140,6 +143,7 @@ write_update<-function(outNC, current_objects, obj_props, obs_time, frame1, fram
         ncvar_put(outNC, varid = "y_dist", obj_props$ydist[object], start = nc_start, count = nc_count)
 
         ncvar_put(outNC, varid = "area", obj_props$area[object],  start = nc_start, count = nc_count)
+        ncvar_put(outNC, varid = "eccentricity", obj_props$eccentricity[object],  start = nc_start, count = nc_count)
     }
 
     write_duration(outNC, current_objects, frame1, frame2)
