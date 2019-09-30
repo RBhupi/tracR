@@ -2,15 +2,15 @@
 
 
 #' Computes flow in the vicinity of the object.
-#' 
-#' Takes in object info (radius and center) and two images to estimate ambient flow using FFT phase correlation.
+#'
+#' Takes in object info (major axis and center) and two images to estimate ambient flow using FFT phase correlation.
 #' Margin is the additional region arround the object used to comput the flow vectors.
 get_objAmbientFlow <- function(obj_extent, img1, img2, margin) {
     #coordinates of the flowregion
-    r1 <- obj_extent$obj_center[1] - obj_extent$obj_radius - margin
-    r2 <- obj_extent$obj_center[1] + obj_extent$obj_radius + margin
-    c1 <- obj_extent$obj_center[2] - obj_extent$obj_radius - margin
-    c2 <- obj_extent$obj_center[2] + obj_extent$obj_radius + margin
+    r1 <- obj_extent$obj_center[1] - obj_extent$major_axis - margin
+    r2 <- obj_extent$obj_center[1] + obj_extent$major_axis + margin
+    c1 <- obj_extent$obj_center[2] - obj_extent$major_axis - margin
+    c2 <- obj_extent$obj_center[2] + obj_extent$major_axis + margin
 
     dims <- dim(img1)
     if(r1<=0 || c1 <=0 || r2>dims[1] || c2 > dims[2]){
@@ -25,7 +25,7 @@ get_objAmbientFlow <- function(obj_extent, img1, img2, margin) {
 
 
 #' Alternative to get_objAmbientFlow.
-#' 
+#'
 #' Flow vectors magnitude is clipped to given magnitude to controll erratic output from FFT flow.
 get_std_flowVector<-function(obj_extent, img1, img2, margin, magnitude){
     shift <- get_objAmbientFlow(obj_extent, img1, img2, margin)
@@ -75,8 +75,8 @@ fft_crossCov <- function (img1, img2) {
 }
 
 
-#' Rearranges the crossCov matrix 
-#' 
+#' Rearranges the crossCov matrix
+#'
 #' Rearranges the crossCov matrix so that 'zero' frequency or DC component
 #'  is in the middle of the matrix. Taken from stackoverflow Que. 30630632
 fft_shift <- function(fft_mat) {

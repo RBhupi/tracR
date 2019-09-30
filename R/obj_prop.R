@@ -25,18 +25,17 @@ get_objExtent <- function(labeled_image, obj_label) {
     #center indices of the object assuming it is a rectangle
     obj_index <- which(labeled_image==obj_label, arr.ind = TRUE)
 
-    xlength <- max(obj_index[, 1]) - min(obj_index[, 1]) + 1
-    ylength <- max(obj_index[, 2]) - min(obj_index[, 2]) + 1
+    x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
+    y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
 
-    obj_radius<- max(c(xlength, ylength))/2 #maximum possible object radius
-    #obj_center <- c(min(obj_index[, 1]) + obj_radius, min(obj_index[, 2]) + obj_radius)
+    obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
 
-    #definition of object center based on median, This needs some thought
+    #definition of object center based on median, This is working better.
     obj_center <- c(median(obj_index[, 1]), median(obj_index[, 2]))
 
     obj_area <- length(obj_index[, 1])  #size in pixels
 
-    obj_extent<-list(obj_center=obj_center, obj_radius=obj_radius,
+    obj_extent<-list(obj_center=obj_center, major_axis=obj_major_axis,
                      obj_area=obj_area, obj_index=obj_index)
 
     return(obj_extent)
@@ -49,7 +48,9 @@ get_objExtent <- function(labeled_image, obj_label) {
 #' Predicts search extent/region for the object in image2 given the image shift.
 predict_searchExtent <- function(obj1_extent, shift){
     shifted_center <- obj1_extent$obj_center + shift
-    search_radius <- sqrt(obj1_extent$obj_area)
+    search_radius <- ceiling(sqrt(obj1_extent$obj_area))
+
+    if(search_radius< min_size) search_radius <- min_size
 
     x1 <- shifted_center[1] - search_radius
     x2 <- shifted_center[1] + search_radius
@@ -127,10 +128,21 @@ get_objectProp <- function(image1, xyDist){
 
     for(obj in seq(nobj)){
         obj_index <- which(image1==obj, arr.ind = TRUE)
+
+        x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
+        y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
+
+        obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
+        obj_minor_axis <- min(c(x_axis, y_axis)) #maximum possible object radiu
+        eccentricity <- sqrt(1-(obj_minor_axis^2/obj_major_axis^2)) #assuming elliptical shape
+
         objprop$id1 <- append (objprop$id1, obj)  #id in frame1
         objprop$x <- append(objprop$x, floor(median(obj_index[, 1]))) #center column
         objprop$y <- append(objprop$y, floor(median(obj_index[, 2]))) #center row
         objprop$area <- append(objprop$area, length(obj_index[, 1]))
+        objprop$major_axis <- append(objprop$major_axis, obj_major_axis)
+        objprop$minor_axis <- append(objprop$minor_axis, obj_minor_axis)
+        objprop$eccentricity<- append(objprop$eccentricity, eccentricity)
     }
     objprop <- attach_xyDist(objprop, xyDist$x, xyDist$y)
     invisible(objprop)

@@ -30,7 +30,7 @@ get_disparity_all <- function(obj_found, image2, search_box, obj1_extent) {
 
         if(length(obj_found)==1){ # if this is the only object
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
-            if(disparity <= 5) disparity <- 0 #lower the disparity if not too large
+            if(disparity <= 4) disparity <- 0 #lower the disparity if not too large
 
         } else { # when more than one objects to match
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
@@ -55,7 +55,6 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
         target_extent <- get_objExtent(image2, target_obj)
         overlap_area <- check_bigOverlap(obj1_extent, target_extent)
         overlap <- append(overlap, overlap_area)
-
         euc_dist<- euclidean_dist(target_extent$obj_center, search_box$center_pred)
         dist_pred <- append(dist_pred, euc_dist)
 
@@ -67,7 +66,7 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
     }
 
     #This is crucial parameter that affect the results
-    disparity <- dist_pred + change + dist_initial - overlap
+    disparity <- dist_pred + change + dist_initial# - overlap
 
 
     return(disparity)

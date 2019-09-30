@@ -48,7 +48,6 @@ get_origin_uid<-function(obj, frame1, old_objects, old_frame1){
     if (origin_id==0) return(0)
 
     origin_index <- which(old_objects$id1==origin_id)
-
     origin_uid <- old_objects$uid[origin_index]
     return(origin_uid)
 }
