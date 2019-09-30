@@ -7,35 +7,20 @@
 #' I am using an arbitrary crieterion for merging. If euclidean distance between centers
 #' of the two objects c_dist < or = to r=sqrt(area), then merging is considered.
 #' Here, if we assume square objects, then the r is length of a sides of the square.
-check_merging<-function(dead_obj_id1, current_objects, object_props){
+check_merging<-function(dead_obj_id1, current_objects, frame1, frame2){
     nobj_frame1 <- length(current_objects$id1)
-    c_dist_all <- NULL
-    checked_id1 <- NULL
 
     #' If all objects are dead in frame2 then no merging happened.
     if(all(current_objects$id2==0)) return(0)
 
-    for(check_obj in seq(nobj_frame1)){
-        # skip checking dead objects of frame2
-        if(current_objects$id2[check_obj]!=0){
-            dead_xy <- c(obj_props$x[dead_obj_id1], obj_props$y[dead_obj_id1])
-            merge_xy <- c(obj_props$x[check_obj], obj_props$y[check_obj])
-            c_dist <- euclidean_dist(merge_xy, dead_xy)
-            if(c_dist < sqrt(object_props$area[check_obj])){
-                c_dist_all <-append(c_dist_all, c_dist)
-                checked_id1 <- append(checked_id1, check_obj)
-            }
-
-        }
-    }
-    #if this is null, then no merging, else nearest object is the product of merging.
-    if(is.null(c_dist_all)) return(0)
-    else {
-        product_id1 <- checked_id1[which(c_dist_all==min(c_dist_all))]
-        return(current_objects$uid[product_id1])
-    }
+    dead_obj_ind1 <- which(frame1==dead_obj_id1, arr.ind = TRUE)
+    overlap_ind2 <- frame2[dead_obj_ind1]
+    merge_id2 <- which.max(table(overlap_ind2[overlap_ind2>0]))
 
 
+    if(length(merge_id2 )==0) return(0)
+    #OR else
+    return(names(merge_id2))
 }
 
 #' Find id of the parent of the new born object.

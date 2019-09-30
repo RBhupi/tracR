@@ -126,7 +126,7 @@ write_settingParms_toNC <- function(outNC){
 #' @param obj_props output of \code{get_object_prop()}
 #' @param obs_time time of first scan in POSIX format. units="seconds since 1970-01-01".
 #' @export
-write_update<-function(outNC, current_objects, obj_props, obs_time){
+write_update<-function(outNC, current_objects, obj_props, obs_time, frame1, frame2){
     nobj <- length(current_objects$id1) #num of objects in frame1
 
     for(object in seq(nobj)){
@@ -142,14 +142,14 @@ write_update<-function(outNC, current_objects, obj_props, obs_time){
         ncvar_put(outNC, varid = "area", obj_props$area[object],  start = nc_start, count = nc_count)
     }
 
-    write_duration(outNC, current_objects)
+    write_duration(outNC, current_objects, frame1, frame2)
 }
 
 
 #' Write duration of dead objects in output NC file.
 #'
 #' Writes number of observations for dead objects. Duration is in time-steps.
-write_duration <- function(outNC, current_objects){
+write_duration <- function(outNC, current_objects, frame1, frame2){
     nobj <- length(current_objects$id1)
 
     for (obj in seq(nobj)){
@@ -160,7 +160,7 @@ write_duration <- function(outNC, current_objects){
                       start=current_objects$uid[obj], count=1)
 
             #check for merging
-            merged_in <- check_merging(obj, current_objects, obj_props)
+            merged_in <- check_merging(obj, current_objects, frame1, frame2)
             ncvar_put(outNC, varid="merged", merged_in,
                       start=current_objects$uid[obj], count=1)
         }
