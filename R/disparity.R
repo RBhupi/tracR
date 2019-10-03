@@ -1,15 +1,9 @@
 
 #' returns size change between the frames.
 #'
-#' Returns change in size of the eacho as ratio of bigger number to smaller
-#' number when given two number, minus 1.
+#' Returns change in size of the echo.
 get_sizeChange<-function(x, y){
-    if(x < 5 && y <5 ) # if too small, return zero
-        return(0)
-    else if(x>=y)
-        return(x/y - 1)
-    else
-        return(y/x - 1)
+    return(abs(x-y))
 }
 
 
@@ -30,12 +24,13 @@ get_disparity_all <- function(obj_found, image2, search_box, obj1_extent) {
 
         if(length(obj_found)==1){ # if this is the only object
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
-            if(disparity <= 4) disparity <- 0 #lower the disparity if not too large
+            if(disparity <= 2) disparity <- 0 #lower the disparity if not too large
 
         } else { # when more than one objects to match
             disparity <- get_disparity(obj_found, image2, search_box, obj1_extent)
         }
     }
+    disparity <- replace(disparity, disparity<0, 0)
     return(disparity)
 }
 
@@ -62,12 +57,11 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
         dist_initial <- append(dist_initial, euc_dist)
         size_changed <- get_sizeChange(target_extent$obj_area, obj1_extent$obj_area) #change in size
         change <- append(change, size_changed)
-
     }
 
-    #This is crucial parameter that affect the results
-    disparity <- dist_pred + change + dist_initial# - overlap
-
+    #This is crucial parameter that affect the results. this is found to be stable.
+    #the idea is to combined change in location (distances) and change in area in disparity.
+    disparity <- dist_pred + dist_initial + sqrt(change) - overlap
 
     return(disparity)
 }

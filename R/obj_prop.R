@@ -10,7 +10,7 @@ correct_shift<-function(this_shift, current_objects, object_id1){
                     current_objects$yhead[current_objects$id2==object_id1])
 
     #for small shifts and empty last shifts
-    if(is.na(last_heads) || all(last_heads<=1 && last_heads>=-1, na.rm = TRUE))
+    if((length(last_heads)<2) || any(is.na(last_heads)))
         return(this_shift)
     else if(any(abs(this_shift-last_heads)>4))  #if they are too different
         return(last_heads)                      #then trust last_heads
