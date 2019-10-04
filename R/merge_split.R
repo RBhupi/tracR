@@ -16,11 +16,11 @@ check_merging<-function(dead_obj_id1, current_objects, frame1, frame2){
     dead_obj_ind1 <- which(frame1==dead_obj_id1, arr.ind = TRUE)
     overlap_ind2 <- frame2[dead_obj_ind1]
     merge_id2 <- which.max(table(overlap_ind2[overlap_ind2>0]))
+    merge_id2 <- names(merge_id2)
+    merge_uid <- current_objects$uid[current_objects$id2==merge_id2]
 
-
-    if(length(merge_id2 )==0) return(0)
-    #OR else
-    return(names(merge_id2))
+    if(length(merge_uid)==0) return(0)
+    return(merge_uid)
 }
 
 #' Find id of the parent of the new born object.
