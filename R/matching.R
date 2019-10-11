@@ -31,10 +31,12 @@ match_pairs <- function(obj_match) {
     pairs <- as.vector(pairs)
     # remove bad matching
     for(pair in 1:length(pairs)){
-        if(obj_match[pair, pairs[pair]] > max_desparity){
+        match_disp <- obj_match[pair, pairs[pair]]
+        if(length(match_disp)>0 && match_disp > max_desparity){
             pairs[pair] <- 0
         }
     }
+
     return(pairs)
 }
 

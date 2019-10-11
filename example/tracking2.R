@@ -69,6 +69,7 @@ frame2 <- replace(frame2, frame2<2, 0)
 frame2 <- filterFrame(frame2, min_size)
 
 
+
 for(scan_ind in (start_scan+1):end_scan){
     setTxtProgressBar(pb, scan_ind) #progress bar
 
@@ -101,7 +102,6 @@ for(scan_ind in (start_scan+1):end_scan){
         #write zeros for empty frames
         write_survival(outNC, survival_stat = rep(0, 4),
                        time = time[scan_ind], scan = scan_ind)
-
         next
     }
 
