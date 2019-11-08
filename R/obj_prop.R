@@ -121,7 +121,7 @@ get_objectCenter<-function(obj_id, labeled_image){
 #' Return all the object's size, location and classification info.
 #'
 #' xyDist should be a list of x_dist and y_dist in km.
-#' @export
+#'
 get_objectProp <- function(image1, xyDist){
     objprop <- c(NULL)
     nobj <- max(image1)

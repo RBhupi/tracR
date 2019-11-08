@@ -7,6 +7,6 @@
 get_objAmbientFlow(obj_extent, img1, img2, margin)
 }
 \description{
-Takes in object info (radius and center) and two images to estimate ambient flow using FFT phase correlation.
+Takes in object info (major axis and center) and two images to estimate ambient flow using FFT phase correlation.
 Margin is the additional region arround the object used to comput the flow vectors.
 }

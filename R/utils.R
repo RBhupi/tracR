@@ -1,6 +1,7 @@
 #' Plots image with objects labels.
 #'
 #' This is used in development stage to test images when processed 1-by-1.
+#' @export
 plot_objects_label <- function(labeled_image, xvalues, yvalues){
     image2D(replace(labeled_image, labeled_image==0, NA), x=xvalues, y=yvalues)
     grid()

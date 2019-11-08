@@ -17,7 +17,7 @@ get_filteredFrame <- function(ncfile, var_id, scan_num, min_size=2) {
 
 #' filters frame for small objects when frame is already available.
 #' 
-#' @export
+#' 
 filterFrame <- function(frame, min_size = 2) 
 {
     labeled_echo <- EBImage::bwlabel(frame)

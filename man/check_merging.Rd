@@ -4,7 +4,7 @@
 \alias{check_merging}
 \title{Checks possible merging of the dead objects.}
 \usage{
-check_merging(dead_obj_id1, current_objects, object_props)
+check_merging(dead_obj_id1, current_objects, frame1, frame2)
 }
 \description{
 This function takes in two R-lists containing information about current objects

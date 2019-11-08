@@ -4,7 +4,7 @@
 \alias{get_origin_uid}
 \title{Find id of the parent of the new born object.}
 \usage{
-get_origin_uid(obj, frame1, old_objects)
+get_origin_uid(obj, frame1, old_objects, old_frame1)
 }
 \description{
 returns unique id of the origin (or zero) for given object in frame1.

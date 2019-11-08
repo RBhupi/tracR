@@ -4,7 +4,7 @@
 \alias{find_origin}
 \title{Checks for parent in the vicinity.}
 \usage{
-find_origin(id1_newObj, frame1)
+find_origin(id1_newObj, frame1, old_frame1)
 }
 \description{
 This function checks near by objects in the frame for the given new-born object.

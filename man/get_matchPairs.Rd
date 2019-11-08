@@ -7,7 +7,7 @@
 get_matchPairs(image1, image2)
 }
 \description{
-Given two images, the function identifies the matching 
+Given two images, the function identifies the matching
 objects and pair them appropriatly using Hungarian method and desparity.
 }
 \seealso{

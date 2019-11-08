@@ -4,7 +4,7 @@
 \alias{predict_searchExtent}
 \title{predict search region.}
 \usage{
-predict_searchExtent(obj1_extent, shift, search_radius)
+predict_searchExtent(obj1_extent, shift)
 }
 \description{
 Predicts search extent/region for the object in image2 given the image shift.

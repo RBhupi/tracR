@@ -7,6 +7,6 @@
 get_objectCenter(obj_id, labeled_image)
 }
 \description{
-Returns indices of center pixel of the given object id from a labeled image. 
+Returns indices of center pixel of the given object id from a labeled image.
 This may be done in better way for non-oval objects.
 }

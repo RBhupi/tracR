@@ -4,7 +4,7 @@
 \alias{write_update}
 \title{Writes properties and uids for all objects into output netcdf file.}
 \usage{
-write_update(outNC, current_objects, obj_props, obs_time)
+write_update(outNC, current_objects, obj_props, obs_time, frame1, frame2)
 }
 \arguments{
 \item{outNC}{output netcdf file object from function \code{\link{create_outNC_track}}}

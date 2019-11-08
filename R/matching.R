@@ -1,5 +1,5 @@
 
-#'returns pairs of object ids from both frames.
+#' returns pairs of object ids from both frames.
 #'
 #' Given two images, the function identifies the matching
 #' objects and pair them appropriatly using Hungarian method and desparity.

@@ -4,7 +4,7 @@
 \alias{update_current_objects}
 \title{Removes dead objects, updates living objects and assign new uids to new born objects.}
 \usage{
-update_current_objects(frame1, frame2, pairs, old_objects)
+update_current_objects(old_frame1, frame1, frame2, pairs, old_objects)
 }
 \description{
 Also, updates number of valid observations for each echo.

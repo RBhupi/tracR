@@ -4,7 +4,7 @@
 \alias{write_duration}
 \title{Write duration of dead objects in output NC file.}
 \usage{
-write_duration(outNC, current_objects)
+write_duration(outNC, current_objects, frame1, frame2)
 }
 \description{
 Writes number of observations for dead objects. Duration is in time-steps.

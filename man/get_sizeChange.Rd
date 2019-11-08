@@ -7,6 +7,5 @@
 get_sizeChange(x, y)
 }
 \description{
-Returns change in size of the eacho as ratio of bigger number to smaller
-number when given two number, minus 1.
+Returns change in size of the echo.
 }
