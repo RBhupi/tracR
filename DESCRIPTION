@@ -1,5 +1,5 @@
 Package: trackR
-Title: Tracks Objects in the Radar Data
+Title: Tracks objects in the image data
 Version: 0.0.0.9000
 Authors@R: person("Bhupendra", "Raut", email = "bhupendra.raut@monash.edu", role = c("aut", "cre"))
 Description: This R package is created for tracking convection echoes in CPOL radar data over Darwin. We first identify the contiguous convective regions and then flow vectors are estimated for the region of convection using phase correlation method (Leese et al 1971). Using these flow vector as the first guess,  the search region is predicted for each object. In the next frame, all objects in that region (in frame2) are assigned to the object in frame 1.The disparity or cost function is computed for each combination of pairs and assignment is done using Hungarian method. For the object pairs with large disparity, we assumed that the old object is dead in frame1 and the new object was born in frame2.

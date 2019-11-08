@@ -2,6 +2,7 @@ library(trackR)
 
 
 start_time <- proc.time()
+
 #+ echo=TRUE
 #'----------------------- Settings for tracking method ------------------------#
 #search_margin <- 4          #pixels
