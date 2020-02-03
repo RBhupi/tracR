@@ -122,6 +122,7 @@ get_objectCenter<-function(obj_id, labeled_image){
 #'
 #' xyDist should be a list of x_dist and y_dist in km.
 #'
+#'@export
 get_objectProp <- function(image1, xyDist){
     objprop <- c(NULL)
     nobj <- max(image1)
@@ -133,8 +134,8 @@ get_objectProp <- function(image1, xyDist){
         y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
 
         obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
-        obj_minor_axis <- min(c(x_axis, y_axis)) #maximum possible object radiu
-        eccentricity <- sqrt(1-(obj_minor_axis^2/obj_major_axis^2)) #assuming elliptical shape
+        obj_minor_axis <- min(c(x_axis, y_axis)) #maximum possible object radius
+        shape <- obj_minor_axis/obj_major_axis #
 
         objprop$id1 <- append (objprop$id1, obj)  #id in frame1
         objprop$x <- append(objprop$x, floor(median(obj_index[, 1]))) #center column
@@ -142,7 +143,7 @@ get_objectProp <- function(image1, xyDist){
         objprop$area <- append(objprop$area, length(obj_index[, 1]))
         objprop$major_axis <- append(objprop$major_axis, obj_major_axis)
         objprop$minor_axis <- append(objprop$minor_axis, obj_minor_axis)
-        objprop$eccentricity<- append(objprop$eccentricity, eccentricity)
+        objprop$shape<- append(objprop$shape, shape)
     }
     objprop <- attach_xyDist(objprop, xyDist$x, xyDist$y)
     invisible(objprop)
