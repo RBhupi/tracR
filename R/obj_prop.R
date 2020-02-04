@@ -162,4 +162,25 @@ attach_xyDist<-function(obj_props, xdist, ydist){
 }
 
 
+#'
+#'
+#'Try to fit optimum ellipse for the object shape, given the object index.
+#'The ellipse fitted with this method does not enclosed the object but it provide optimum ellipse parameters.
+#'The ratio of major and minor axis and eccentricity are correctly estimated for tracking purpose.
+fitEllipse <- function(object_index){
+    x_len <- (max(object_index[, 1]) - min(object_index[, 1]) + 1)
+    y_len <- (max(object_index[, 2]) - min(object_index[, 2]) + 1)
+
+    if(x_len < 3 | y_len < 3){ # can not fit ellipse
+        ellipseGPar <- NA
+    }else{
+
+        ellipDirect <- EllipseDirectFit(object_index)
+        ellipDirectG <- AtoG(ellipDirect)$ParG
+
+        ellipseGPar <- list(center = c(ellipDirectG[1:2, ]), major = ellipDirectG[3, ],
+                            minor = ellipDirectG[4, ], angle = ellipDirectG[5, ])
+    }
+    return(ellipseGPar)
+}
 
