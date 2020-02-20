@@ -7,10 +7,10 @@
 #' Margin is the additional region arround the object used to comput the flow vectors.
 get_objAmbientFlow <- function(obj_extent, img1, img2, margin) {
     #coordinates of the flowregion
-    r1 <- obj_extent$obj_center[1] - obj_extent$major_axis - margin
-    r2 <- obj_extent$obj_center[1] + obj_extent$major_axis + margin
-    c1 <- obj_extent$obj_center[2] - obj_extent$major_axis - margin
-    c2 <- obj_extent$obj_center[2] + obj_extent$major_axis + margin
+    r1 <- obj_extent$obj_center[1] - obj_extent$width - margin
+    r2 <- obj_extent$obj_center[1] + obj_extent$width + margin
+    c1 <- obj_extent$obj_center[2] - obj_extent$width - margin
+    c2 <- obj_extent$obj_center[2] + obj_extent$width + margin
 
     dims <- dim(img1)
     if(r1<=0 || c1 <=0 || r2>dims[1] || c2 > dims[2]){

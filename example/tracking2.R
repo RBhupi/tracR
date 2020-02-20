@@ -1,5 +1,5 @@
 library(trackR)
-
+library(ncdf4)
 
 start_time <- proc.time()
 
@@ -33,7 +33,7 @@ x <- ncvar_get(ncfile, varid = "x")
 y <- ncvar_get(ncfile, varid = "y")
 nc_close(ncfile)
 
-start_scan <- 1 #19300
+start_scan <- 12 #19300
 newRain <- TRUE         #is this new rainy scan after dry period?
 
 #read x, y and time from the file
@@ -50,7 +50,7 @@ outNC <- create_outNC_track(outfile_name, max_obs)
 
 
 print(paste("start scan = ", start_scan))
-end_scan <- length(time)
+end_scan <- 100 #length(time)
 print(paste("Total scans in this file", end_scan-start_scan+1))
 pb = txtProgressBar(min =start_scan, max = end_scan, initial = 1, style = 3) #progress bar
 
@@ -85,7 +85,6 @@ for(scan_ind in (start_scan+1):end_scan){
     frame2 <- replace(frame2, is.na(frame2), 0)
     frame2 <- replace(frame2, frame2<2, 0)
     frame2 <- filterFrame(frame2, min_size)
-
 
     #if this is the last scan make it zero. This kills all the objects.
     if(scan_ind==end_scan)

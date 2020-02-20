@@ -65,7 +65,11 @@ create_outNC_track <- function(ofile, max_obs) {
     var_npix <- ncvar_def("area", units = "pixels", longname = "area of the echo in pixels",
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
                           compression = deflat, shuffle = TRUE)
-    var_ecnt <- ncvar_def("shape", units = "", longname = "ratio of minor axis to major axis",
+    var_ecnt <- ncvar_def("elongation", units = "", longname = "ratio of minor axis to major axis",
+                          dim = list(dim_obs, dim_echo), missval = -999, prec = "float",
+                          compression = deflat, shuffle = TRUE)
+
+    var_angle <- ncvar_def("orientation", units = "radians", longname = "Angle of orientation of major axis",
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "float",
                           compression = deflat, shuffle = TRUE)
 
@@ -82,7 +86,7 @@ create_outNC_track <- function(ofile, max_obs) {
     #                     compression = deflat, shuffle = TRUE)
 
     var_list <- list(var_time, var_survival, var_dur, var_origin, var_merged, var_xdist, var_ydist,
-                     var_x, var_y, var_npix, var_ecnt) #, var_ncg, var_ncb, var_nco)
+                     var_x, var_y, var_npix, var_ecnt, var_angle) #, var_ncg, var_ncb, var_nco)
 
 
     outNC <- nc_create(filename = ofile, vars = var_list)
@@ -143,7 +147,8 @@ write_update<-function(outNC, current_objects, obj_props, obs_time, frame1, fram
         ncvar_put(outNC, varid = "y_dist", obj_props$ydist[object], start = nc_start, count = nc_count)
 
         ncvar_put(outNC, varid = "area", obj_props$area[object],  start = nc_start, count = nc_count)
-        ncvar_put(outNC, varid = "shape", obj_props$shape[object],  start = nc_start, count = nc_count)
+        ncvar_put(outNC, varid = "elongation", obj_props$elongation[object],  start = nc_start, count = nc_count)
+        ncvar_put(outNC, varid = "orientation", obj_props$orientation[object],  start = nc_start, count = nc_count)
     }
 
     write_duration(outNC, current_objects, frame1, frame2)

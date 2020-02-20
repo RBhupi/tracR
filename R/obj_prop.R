@@ -24,18 +24,17 @@ correct_shift<-function(this_shift, current_objects, object_id1){
 get_objExtent <- function(labeled_image, obj_label) {
     #center indices of the object assuming it is a rectangle
     obj_index <- which(labeled_image==obj_label, arr.ind = TRUE)
+    x_len <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)
+    y_len <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)
 
-    x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
-    y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
-
-    obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
+    obj_width <- max(c(x_len, y_len)) #maximum possible object radius
 
     #definition of object center based on median, This is working better.
     obj_center <- c(median(obj_index[, 1]), median(obj_index[, 2]))
 
     obj_area <- length(obj_index[, 1])  #size in pixels
 
-    obj_extent<-list(obj_center=obj_center, major_axis=obj_major_axis,
+    obj_extent<-list(obj_center=obj_center, width=obj_width,
                      obj_area=obj_area, obj_index=obj_index)
 
     return(obj_extent)
@@ -133,17 +132,20 @@ get_objectProp <- function(image1, xyDist){
         x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
         y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
 
-        obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
-        obj_minor_axis <- min(c(x_axis, y_axis)) #maximum possible object radius
-        shape <- obj_minor_axis/obj_major_axis #
+        obj_width <- max(c(x_axis, y_axis)) #maximum possible object radius
+        obj_breadth <- min(c(x_axis, y_axis)) #maximum possible object radius
+
+        ellipse_par <- fitEllipse(obj_index)
+        elongation <- ellipse_par$minor/ellipse_par$major #minor_axis/major_axis
 
         objprop$id1 <- append (objprop$id1, obj)  #id in frame1
         objprop$x <- append(objprop$x, floor(median(obj_index[, 1]))) #center column
         objprop$y <- append(objprop$y, floor(median(obj_index[, 2]))) #center row
         objprop$area <- append(objprop$area, length(obj_index[, 1]))
-        objprop$major_axis <- append(objprop$major_axis, obj_major_axis)
-        objprop$minor_axis <- append(objprop$minor_axis, obj_minor_axis)
-        objprop$shape<- append(objprop$shape, shape)
+        objprop$width <- append(objprop$width, obj_width)
+        objprop$breadth <- append(objprop$breadth, obj_breadth)
+        objprop$elongation<- append(objprop$elongation, elongation)
+        objprop$orientation<- append(objprop$orientation, ellipse_par$angle)
     }
     objprop <- attach_xyDist(objprop, xyDist$x, xyDist$y)
     invisible(objprop)
@@ -164,23 +166,30 @@ attach_xyDist<-function(obj_props, xdist, ydist){
 
 #'
 #'
-#'Try to fit optimum ellipse for the object shape, given the object index.
+#'Try to fit optimum ellipse for the object elongation, given the object index.
 #'The ellipse fitted with this method does not enclosed the object but it provide optimum ellipse parameters.
 #'The ratio of major and minor axis and eccentricity are correctly estimated for tracking purpose.
 fitEllipse <- function(object_index){
     x_len <- (max(object_index[, 1]) - min(object_index[, 1]) + 1)
     y_len <- (max(object_index[, 2]) - min(object_index[, 2]) + 1)
 
+    ellipseGPar <- NULL
+
     if(x_len < 3 | y_len < 3){ # can not fit ellipse
-        ellipseGPar <- NA
+        ellipseGPar <- list(center = c(NA, NA), major = NA,
+                            minor = NA, angle = NA)
     }else{
-
-        ellipDirect <- EllipseDirectFit(object_index)
-        ellipDirectG <- AtoG(ellipDirect)$ParG
-
+        tryCatch({
+        ellipDirect <- conicfit::EllipseDirectFit(object_index)
+        ellipDirectG <- conicfit::AtoG(ellipDirect)$ParG
         ellipseGPar <- list(center = c(ellipDirectG[1:2, ]), major = ellipDirectG[3, ],
                             minor = ellipDirectG[4, ], angle = ellipDirectG[5, ])
-    }
+        },error=function(err){
+            ellipseGPar <<- list(center = c(NA, NA), major = NA, minor = NA, angle = NA)
+            return(NULL)
+        }
+
+        )}
     return(ellipseGPar)
 }
 
