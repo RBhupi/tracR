@@ -65,7 +65,7 @@ create_outNC_track <- function(ofile, max_obs) {
     var_npix <- ncvar_def("area", units = "pixels", longname = "area of the echo in pixels",
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
                           compression = deflat, shuffle = TRUE)
-    var_ecnt <- ncvar_def("elongation", units = "", longname = "ratio of minor axis to major axis",
+    var_ecnt <- ncvar_def("circularity", units = "", longname = "ratio of minor axis to major axis",
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "float",
                           compression = deflat, shuffle = TRUE)
 
@@ -147,7 +147,7 @@ write_update<-function(outNC, current_objects, obj_props, obs_time, frame1, fram
         ncvar_put(outNC, varid = "y_dist", obj_props$ydist[object], start = nc_start, count = nc_count)
 
         ncvar_put(outNC, varid = "area", obj_props$area[object],  start = nc_start, count = nc_count)
-        ncvar_put(outNC, varid = "elongation", obj_props$elongation[object],  start = nc_start, count = nc_count)
+        ncvar_put(outNC, varid = "circularity", obj_props$circularity[object],  start = nc_start, count = nc_count)
         ncvar_put(outNC, varid = "orientation", obj_props$orientation[object],  start = nc_start, count = nc_count)
     }
 

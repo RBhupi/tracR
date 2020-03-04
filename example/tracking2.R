@@ -13,7 +13,7 @@ max_obs<- 65                #longest recoreded track (else show error).
 min_size <- 4               #objects smaller than this will be filtered out
 max_desparity <- 18         # two objects with more desparity than this value, are not the same.
 big_obj_size <- 100          # Use overlap method
-split_distance <- 3         # new object's neighboure closer than this distance is its origin
+#split_distance <- 3         # new object's neighboure closer than this distance is its origin
 #==============================================================================#
 
 
@@ -33,7 +33,7 @@ x <- ncvar_get(ncfile, varid = "x")
 y <- ncvar_get(ncfile, varid = "y")
 nc_close(ncfile)
 
-start_scan <- 12 #19300
+start_scan <- 1 #19300
 newRain <- TRUE         #is this new rainy scan after dry period?
 
 #read x, y and time from the file
@@ -42,7 +42,7 @@ time <- ncvar_get(ncfile, varid="time")
 #time <- change_baseEpoch(time, From_epoch = as.Date("2004-01-01"))
 
 
-outfile_name <- "./output/test_delete.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
+outfile_name <- "./output/tracks_atwtClass_V20-03.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
 #outfile_name <- "~/Desktop/test_tracks.nc"
 print(paste("Opening output file", outfile_name))
 
@@ -50,7 +50,7 @@ outNC <- create_outNC_track(outfile_name, max_obs)
 
 
 print(paste("start scan = ", start_scan))
-end_scan <- 100 #length(time)
+end_scan <- length(time)
 print(paste("Total scans in this file", end_scan-start_scan+1))
 pb = txtProgressBar(min =start_scan, max = end_scan, initial = 1, style = 3) #progress bar
 
