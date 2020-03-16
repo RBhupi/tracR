@@ -69,6 +69,11 @@ locate_allObjects <- function(image1, image2) {
         disparity <- get_disparity_all(obj_found, image2, search_box, obj1_extent)
 
         obj_match <- save_objMatch(obj_id1, obj_found, disparity, obj_match)
+        #write.table(length(obj_found), file = "/home/bhupendra/Desktop/objects_found.txt",
+        #            append = TRUE, na = "NA", row.names = FALSE, col.names = FALSE)
+        #sink()
+
+
     }
 
     invisible(obj_match)

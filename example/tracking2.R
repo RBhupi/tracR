@@ -1,5 +1,5 @@
 library(trackR)
-
+library(ncdf4)
 
 start_time <- proc.time()
 
@@ -13,7 +13,7 @@ max_obs<- 65                #longest recoreded track (else show error).
 min_size <- 4               #objects smaller than this will be filtered out
 max_desparity <- 18         # two objects with more desparity than this value, are not the same.
 big_obj_size <- 100          # Use overlap method
-split_distance <- 3         # new object's neighboure closer than this distance is its origin
+#split_distance <- 3         # new object's neighboure closer than this distance is its origin
 #==============================================================================#
 
 
@@ -42,7 +42,7 @@ time <- ncvar_get(ncfile, varid="time")
 #time <- change_baseEpoch(time, From_epoch = as.Date("2004-01-01"))
 
 
-outfile_name <- "./output/test_delete.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
+outfile_name <- "~/Desktop/delete.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
 #outfile_name <- "~/Desktop/test_tracks.nc"
 print(paste("Opening output file", outfile_name))
 
@@ -85,7 +85,6 @@ for(scan_ind in (start_scan+1):end_scan){
     frame2 <- replace(frame2, is.na(frame2), 0)
     frame2 <- replace(frame2, frame2<2, 0)
     frame2 <- filterFrame(frame2, min_size)
-
 
     #if this is the last scan make it zero. This kills all the objects.
     if(scan_ind==end_scan)

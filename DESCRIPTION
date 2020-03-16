@@ -6,9 +6,10 @@ Description: This R package is created for tracking convection echoes in CPOL ra
 Imports: clue,
 	stringr,
 	EBImage,
-	spatstat
-Depends: R (>= 3.4.3),
+	spatstat,
+	conicfit,
 	ncdf4
+Depends: R (>= 3.4.3)
 License: The MIT License (MIT)
 Encoding: UTF-8
 LazyData: true

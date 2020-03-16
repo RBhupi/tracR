@@ -24,18 +24,17 @@ correct_shift<-function(this_shift, current_objects, object_id1){
 get_objExtent <- function(labeled_image, obj_label) {
     #center indices of the object assuming it is a rectangle
     obj_index <- which(labeled_image==obj_label, arr.ind = TRUE)
+    x_len <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)
+    y_len <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)
 
-    x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
-    y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
-
-    obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
+    obj_width <- max(c(x_len, y_len)) #maximum possible object radius
 
     #definition of object center based on median, This is working better.
-    obj_center <- c(median(obj_index[, 1]), median(obj_index[, 2]))
-
+    obj_center <- get_objectCenter(obj_label, labeled_image)
     obj_area <- length(obj_index[, 1])  #size in pixels
 
-    obj_extent<-list(obj_center=obj_center, major_axis=obj_major_axis,
+
+    obj_extent<-list(obj_center=obj_center, width=obj_width,
                      obj_area=obj_area, obj_index=obj_index)
 
     return(obj_extent)
@@ -111,8 +110,21 @@ find_objects <- function(search_box, image2) {
 #' This may be done in better way for non-oval objects.
 get_objectCenter<-function(obj_id, labeled_image){
     obj_index <- which(labeled_image==obj_id, arr.ind = TRUE)
-    center_x <- floor(median(obj_index[, 1])) #center column
-    center_y <- floor(median(obj_index[, 2])) #center row
+    center_x <- median(obj_index[, 1]) #center column
+    center_y <- median(obj_index[, 2]) #center row
+
+    pix_value <- labeled_image[center_x, center_y]
+
+    if(pix_value!=obj_id){
+        dist_pix <- NULL
+        for(apix in 1:length(obj_index[, 1])){
+            dist_pix <-append(dist_pix, euclidean_dist(obj_index[apix,], c(center_x, center_y)))
+        }
+        closest_obj_pix <- which.min(dist_pix)
+        center_x <- obj_index[closest_obj_pix, 1]
+        center_y <- obj_index[closest_obj_pix, 2]
+    }
+
     return(c(center_x, center_y))
 }
 
@@ -122,6 +134,7 @@ get_objectCenter<-function(obj_id, labeled_image){
 #'
 #' xyDist should be a list of x_dist and y_dist in km.
 #'
+#'@export
 get_objectProp <- function(image1, xyDist){
     objprop <- c(NULL)
     nobj <- max(image1)
@@ -132,17 +145,20 @@ get_objectProp <- function(image1, xyDist){
         x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
         y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
 
-        obj_major_axis <- max(c(x_axis, y_axis)) #maximum possible object radius
-        obj_minor_axis <- min(c(x_axis, y_axis)) #maximum possible object radiu
-        eccentricity <- sqrt(1-(obj_minor_axis^2/obj_major_axis^2)) #assuming elliptical shape
+        obj_width <- max(c(x_axis, y_axis)) #maximum possible object radius
+        obj_breadth <- min(c(x_axis, y_axis)) #maximum possible object radius
+
+        ellipse_par <- fitEllipse(obj_index)
+        circularity <- ellipse_par$minor/ellipse_par$major #minor_axis/major_axis
 
         objprop$id1 <- append (objprop$id1, obj)  #id in frame1
         objprop$x <- append(objprop$x, floor(median(obj_index[, 1]))) #center column
         objprop$y <- append(objprop$y, floor(median(obj_index[, 2]))) #center row
         objprop$area <- append(objprop$area, length(obj_index[, 1]))
-        objprop$major_axis <- append(objprop$major_axis, obj_major_axis)
-        objprop$minor_axis <- append(objprop$minor_axis, obj_minor_axis)
-        objprop$eccentricity<- append(objprop$eccentricity, eccentricity)
+        objprop$width <- append(objprop$width, obj_width)
+        objprop$breadth <- append(objprop$breadth, obj_breadth)
+        objprop$circularity<- append(objprop$circularity, circularity)
+        objprop$orientation<- append(objprop$orientation, ellipse_par$angle)
     }
     objprop <- attach_xyDist(objprop, xyDist$x, xyDist$y)
     invisible(objprop)
@@ -161,4 +177,35 @@ attach_xyDist<-function(obj_props, xdist, ydist){
 }
 
 
+#'
+#'
+#'Try to fit optimum ellipse for the object circularity, given the object index.
+#'The ellipse fitted with this method does not enclosed the object but it provide optimum ellipse parameters.
+#'The ratio of major and minor axis and eccentricity are correctly estimated for tracking purpose.
+fitEllipse <- function(object_index){
+    x_len <- (max(object_index[, 1]) - min(object_index[, 1]) + 1)
+    y_len <- (max(object_index[, 2]) - min(object_index[, 2]) + 1)
+
+    ellipseGPar <- NULL
+
+    if(x_len < 3 | y_len < 3){ # can not fit ellipse
+        ellipseGPar <- list(center = c(NA, NA), major = NA,
+                            minor = NA, angle = NA)
+    }else{
+        tryCatch({
+        ellipDirect <- conicfit::EllipseDirectFit(object_index)
+        ellipDirectG <- conicfit::AtoG(ellipDirect)$ParG
+        major_ax <- max(ellipDirectG[3, ], ellipDirectG[4, ])
+        minor_ax <- min(ellipDirectG[3, ], ellipDirectG[4, ])
+
+        ellipseGPar <- list(center = c(ellipDirectG[1:2, ]), major = major_ax,
+                            minor = minor_ax, angle = ellipDirectG[5, ])
+        },error=function(err){
+            ellipseGPar <<- list(center = c(NA, NA), major = NA, minor = NA, angle = NA)
+            return(NULL)
+        }
+
+        )}
+    return(ellipseGPar)
+}
 
