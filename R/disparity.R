@@ -57,10 +57,6 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
     #the idea is to combined change in location (distances) and change in area in disparity.
     disparity <- dist_pred + dist_initial + sqrt(change) - sqrt(overlap)
 
-
-
-    sink()
-
     return(disparity)
 }
 

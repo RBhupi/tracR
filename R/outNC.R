@@ -34,10 +34,10 @@ create_outNC_track <- function(ofile, max_obs) {
                          compression = deflat, shuffle = TRUE)
 
     var_origin <- ncvar_def("origin", units="", longname = "id from which the echo split up.",
-                            dim=dim_echo, missval = 0, prec = "integer")
+                            dim=dim_echo, missval = -999, prec = "integer")
 
     var_merged <- ncvar_def("merged", units="", longname = "id in which the echo merged.",
-                            dim=dim_echo, missval = 0, prec = "integer")
+                            dim=dim_echo, missval = -999, prec = "integer")
 
 
     var_time <- ncvar_def("record_time", units = "seconds since 1970-01-01 00:00:00 UTC",

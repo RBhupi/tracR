@@ -42,7 +42,7 @@ time <- ncvar_get(ncfile, varid="time")
 #time <- change_baseEpoch(time, From_epoch = as.Date("2004-01-01"))
 
 
-outfile_name <- "./output/tracks_atwtClass_V20-03.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
+outfile_name <- "~/Desktop/delete.nc" #stringr::str_replace(file_list_steiner, ".nc", "_test_delete.nc")
 #outfile_name <- "~/Desktop/test_tracks.nc"
 print(paste("Opening output file", outfile_name))
 
