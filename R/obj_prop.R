@@ -142,11 +142,11 @@ get_objectProp <- function(image1, xyDist){
     for(obj in seq(nobj)){
         obj_index <- which(image1==obj, arr.ind = TRUE)
 
-        x_axis <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)/2
-        y_axis <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)/2
+        x_len <- (max(obj_index[, 1]) - min(obj_index[, 1]) + 1)
+        y_len <- (max(obj_index[, 2]) - min(obj_index[, 2]) + 1)
 
-        obj_width <- max(c(x_axis, y_axis)) #maximum possible object radius
-        obj_breadth <- min(c(x_axis, y_axis)) #maximum possible object radius
+        obj_width <- max(c(x_len, y_len)) #maximum possible object radius
+        obj_breadth <- min(c(x_len, y_len)) #maximum possible object radius
 
         ellipse_par <- fitEllipse(obj_index)
         circularity <- ellipse_par$minor/ellipse_par$major #minor_axis/major_axis

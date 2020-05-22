@@ -38,7 +38,7 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
     dist_initial <- c(NULL)
     change <- c(NULL)
     overlap <- c(NULL)
-    sink(file = "./output/disparity_param.txt", append = TRUE)
+    #sink(file = "./output/disparity_param.txt", append = TRUE)
     for(target_obj in obj_found){
         target_extent <- get_objExtent(image2, target_obj)
         overlap_area <- check_bigOverlap(obj1_extent, target_extent)
@@ -50,7 +50,7 @@ get_disparity <- function(obj_found, image2, search_box, obj1_extent) {
         dist_initial <- append(dist_initial, euc_dist_cent)
         size_changed <- get_sizeChange(target_extent$obj_area, obj1_extent$obj_area) #change in size
         change <- append(change, size_changed)
-        cat(euc_dist_cent, euc_dist_pred, size_changed, overlap_area, "\n", sep = " ")
+        #cat(euc_dist_cent, euc_dist_pred, size_changed, overlap_area, "\n", sep = " ")
     }
 
     #This is crucial parameter that affect the results. this is found to be stable.

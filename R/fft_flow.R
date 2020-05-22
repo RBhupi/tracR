@@ -6,11 +6,11 @@
 #' Takes in object info (major axis and center) and two images to estimate ambient flow using FFT phase correlation.
 #' Margin is the additional region arround the object used to comput the flow vectors.
 get_objAmbientFlow <- function(obj_extent, img1, img2, margin) {
-    #coordinates of the flowregion
-    r1 <- obj_extent$obj_center[1] - obj_extent$width - margin
-    r2 <- obj_extent$obj_center[1] + obj_extent$width + margin
-    c1 <- obj_extent$obj_center[2] - obj_extent$width - margin
-    c2 <- obj_extent$obj_center[2] + obj_extent$width + margin
+    #coordinates of the flowregion, We divid width by 2, to effectively get radius of the region
+    r1 <- obj_extent$obj_center[1] - obj_extent$width/2 - margin
+    r2 <- obj_extent$obj_center[1] + obj_extent$width/2 + margin
+    c1 <- obj_extent$obj_center[2] - obj_extent$width/2 - margin
+    c2 <- obj_extent$obj_center[2] + obj_extent$width/2 + margin
 
     dims <- dim(img1)
     if(r1<=0 || c1 <=0 || r2>dims[1] || c2 > dims[2]){

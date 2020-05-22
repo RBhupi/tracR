@@ -40,11 +40,11 @@ get_origin_uid<-function(obj, frame1, old_objects, old_frame1){
 
 
 
-#' Checks for parent in the vicinity.
+#' Checks for parent in previous frame.
 #'
-#' This function checks near by objects in the frame for the given new-born object.
+#' This function checks overlapping objects in the old frame for the given new-born object.
 #' origin is an object which existed before the new born objects,
-#' has comparable or larger size and is close enough to the offspring.
+#' has comparable or larger size and has overlapping region with the offspring.
 find_origin <- function(id1_newObj, frame1, old_frame1){
     if(max(frame1)==1 || max(old_frame1)==0) return(0) # If there is only one object, then dont look for origin
 
