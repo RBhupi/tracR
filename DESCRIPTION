@@ -1,8 +1,8 @@
-Package: trackR
-Title: An Adaptive Algorithm for Tracking Convection in Radar, Satellite and Simulation
+Package: PINT
+Title: Prototype for Integrated Non-physical Tracking (PINT) Algorithm for convection.
 Version: 1.0
 Author: Bhupendra Raut <bhupendra.raut@gmail.com>
-Description: TrackR is an R implementation of the efficient algorithm for tracking convection in radar, satellite, and simulated data. It uses the Fourier phase shift method to compute the first guess of the motion and the Hungarian method for optimized matching. The algorithm also checks merging and splitting of the objects based on their size and overlap with the other objects. The algorithm works with bi-level images. Therefore,  the tracks are estimated independent of the physical properties of the objects, such as brightness temperature or reflectivity.
+Description: PINT is an R implementation of the efficient and adaptive algorithm for tracking convection in radar, satellite, and simulated data. It uses the Fourier phase shift method to compute the first guess of the motion and the Hungarian method for optimized matching. The algorithm also checks merging and splitting of the objects based on their size and overlap with the other objects. The algorithm works with bi-level images. Therefore,  the tracks are estimated independent of the physical properties of the objects, such as brightness temperature or reflectivity. TINT is not Titan is the python versin based on the PINT.
 Imports: clue,
 	stringr,
 	EBImage,
