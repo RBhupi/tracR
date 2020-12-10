@@ -31,6 +31,7 @@ get_objExtent <- function(labeled_image, obj_label) {
 
     #definition of object center based on median, This is working better.
     obj_center <- get_objectCenter(obj_label, labeled_image)
+
     obj_area <- length(obj_index[, 1])  #size in pixels
 
 
@@ -110,19 +111,22 @@ find_objects <- function(search_box, image2) {
 #' This may be done in better way for non-oval objects.
 get_objectCenter<-function(obj_id, labeled_image){
     obj_index <- which(labeled_image==obj_id, arr.ind = TRUE)
-    center_x <- median(obj_index[, 1]) #center column
-    center_y <- median(obj_index[, 2]) #center row
+    center_x <- round(median(obj_index[, 1]), digits = 0) #center column
+    center_y <- round(median(obj_index[, 2]), digits = 0) #center row
 
     pix_value <- labeled_image[center_x, center_y]
 
     if(pix_value!=obj_id){
+        #print(c(center_x, center_y))
         dist_pix <- NULL
         for(apix in 1:length(obj_index[, 1])){
             dist_pix <-append(dist_pix, euclidean_dist(obj_index[apix,], c(center_x, center_y)))
         }
         closest_obj_pix <- which.min(dist_pix)
-        center_x <- obj_index[closest_obj_pix, 1]
-        center_y <- obj_index[closest_obj_pix, 2]
+        center_x <- round(obj_index[closest_obj_pix, 1], digits = 0)
+        center_y <- round(obj_index[closest_obj_pix, 2], digits = 0)
+        #print("center change")
+        #print(c(center_x, center_y))
     }
 
     return(c(center_x, center_y))
@@ -159,6 +163,8 @@ get_objectProp <- function(image1, xyDist){
         objprop$breadth <- append(objprop$breadth, obj_breadth)
         objprop$circularity<- append(objprop$circularity, circularity)
         objprop$orientation<- append(objprop$orientation, ellipse_par$angle)
+        objprop$ellipseX<- append(objprop$ellipseX, ellipse_par$center[1])
+        objprop$ellipseY<- append(objprop$ellipseY, ellipse_par$center[2])
     }
     objprop <- attach_xyDist(objprop, xyDist$x, xyDist$y)
     invisible(objprop)
@@ -188,7 +194,7 @@ fitEllipse <- function(object_index){
 
     ellipseGPar <- NULL
 
-    if(x_len < 3 | y_len < 3){ # can not fit ellipse
+    if(x_len < 3 | y_len < 3){ # can not fit ellipse if length/width is less than 3
         ellipseGPar <- list(center = c(NA, NA), major = NA,
                             minor = NA, angle = NA)
     }else{

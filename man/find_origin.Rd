@@ -2,12 +2,12 @@
 % Please edit documentation in R/merge_split.R
 \name{find_origin}
 \alias{find_origin}
-\title{Checks for parent in the vicinity.}
+\title{Checks for parent in previous frame.}
 \usage{
 find_origin(id1_newObj, frame1, old_frame1)
 }
 \description{
-This function checks near by objects in the frame for the given new-born object.
+This function checks overlapping objects in the old frame for the given new-born object.
 origin is an object which existed before the new born objects,
-has comparable or larger size and is close enough to the offspring.
+has comparable or larger size and has overlapping region with the offspring.
 }

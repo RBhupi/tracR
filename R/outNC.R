@@ -73,20 +73,16 @@ create_outNC_track <- function(ofile, max_obs) {
                           dim = list(dim_obs, dim_echo), missval = -999, prec = "float",
                           compression = deflat, shuffle = TRUE)
 
-    #var_ncg <- ncvar_def("Cu_cong", units = "pixels", longname = "num of Cu Congestus pixels",
-    #                     dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
-    #                     compression = deflat, shuffle = TRUE)
+    var_ecx <- ncvar_def("ecx", units = "", longname = "X index of ellipse center",
+                         dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
+                         compression = deflat, shuffle = TRUE)
+    var_ecy <- ncvar_def("ecy", units = "", longname = "Y index of ellipse center",
+                         dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
+                         compression = deflat, shuffle = TRUE)
 
-    #var_ncb <- ncvar_def("Cu_deep", units = "pixels", longname = "num of deep convection pixels",
-    #                     dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
-    #                     compression = deflat, shuffle = TRUE)
-
-    #var_nco <- ncvar_def("Cu_over", units = "pixels", longname = "num of overshooting convection pixels",
-    #                     dim = list(dim_obs, dim_echo), missval = -999, prec = "integer",
-    #                     compression = deflat, shuffle = TRUE)
 
     var_list <- list(var_time, var_survival, var_dur, var_origin, var_merged, var_xdist, var_ydist,
-                     var_x, var_y, var_npix, var_ecnt, var_angle) #, var_ncg, var_ncb, var_nco)
+                     var_x, var_y, var_npix, var_ecnt, var_angle, var_ecx, var_ecy) #, var_ncg, var_ncb, var_nco)
 
 
     outNC <- nc_create(filename = ofile, vars = var_list)
@@ -149,7 +145,9 @@ write_update<-function(outNC, current_objects, obj_props, obs_time, frame1, fram
         ncvar_put(outNC, varid = "area", obj_props$area[object],  start = nc_start, count = nc_count)
         ncvar_put(outNC, varid = "circularity", obj_props$circularity[object],  start = nc_start, count = nc_count)
         ncvar_put(outNC, varid = "orientation", obj_props$orientation[object],  start = nc_start, count = nc_count)
-    }
+        ncvar_put(outNC, varid = "ecx", obj_props$ellipseX[object],  start = nc_start, count = nc_count)
+        ncvar_put(outNC, varid = "ecy", obj_props$ellipseY[object],  start = nc_start, count = nc_count)
+        }
 
     write_duration(outNC, current_objects, frame1, frame2)
 }
