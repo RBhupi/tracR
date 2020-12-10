@@ -9,4 +9,3 @@ works with bi-level images; hence the tracks are estimated independent of the ob
 erties, such as brightness temperature or reflectivity. "TINT is not Titan" is a python version located
 at https://github.com/openradar/TINT. Both tracR and TINT packages are an independent adap-
 tion of the prototype (echo_tracking.R) located at https://github.com/RBhupi/Darwin-Rscripts/
-blob/master/echo_tracking.R
