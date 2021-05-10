@@ -10,7 +10,7 @@ erties, such as brightness temperature or reflectivity. "TINT is not Titan" is a
 at https://github.com/openradar/TINT. Both tracR and TINT packages are an independent adap-
 tion of the prototype (echo_tracking.R) located at https://github.com/RBhupi/Darwin-Rscripts/
 
-Reference for citing the tracking algorithm.
+Reference for the Algorithm.
 
 Raut, B. A., Jackson R., Picel M., Collis S., Bergemann M. & Jakob C.
 (2021). A tracking algorithm for convection in simulated and remote
