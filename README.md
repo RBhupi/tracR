@@ -11,6 +11,7 @@ at https://github.com/openradar/TINT. Both tracR and TINT packages are an indepe
 tion of the prototype (echo_tracking.R) located at https://github.com/RBhupi/Darwin-Rscripts/
 
 Reference for citing the tracking algorithm.
+
 Raut, B. A., Jackson R., Picel M., Collis S., Bergemann M. & Jakob C.
 (2021). A tracking algorithm for convection in simulated and remote
 sensing data. *J. Appl. Meteorol. Clim.*, 60(4), 513-526. https://doi.org/10.1175/JAMC-D-20-0119.1
