@@ -2,11 +2,8 @@
 
 #' Checks possible merging of the dead objects.
 #'
-#'This function takes in two R-lists containing information about current objects
-#' in the frame1 and their properties, such as center location and area. If the
-#' I am using an arbitrary crieterion for merging. If euclidean distance between centers
-#' of the two objects c_dist < or = to r=sqrt(area), then merging is considered.
-#' Here, if we assume square objects, then the r is length of a sides of the square.
+#' This function takes in two frames, current_objects list and checks if the given dead object 
+#' has overlapped with any object in the frame2. If yes then the merging is recorded.
 check_merging<-function(dead_obj_id1, current_objects, frame1, frame2){
     nobj_frame1 <- length(current_objects$id1)
 
